@@ -53,6 +53,9 @@ async def upload_video(to_notify: str, additional_message: str | None = None, fi
                             detail='No file provided')
     
     fs = gridfs.GridFS(app.database)
+
+    print('current user', current_user.get('sub'))
+    print('current user', current_user['name'])
     
     try:
         file_id = fs.put(file.file, filename=file.filename, uploadby=current_user)
@@ -70,7 +73,7 @@ async def upload_video(to_notify: str, additional_message: str | None = None, fi
     }
 
     try:
-        redis_connect.xadd('video upload', queue_message, '*')
+        redis_connect.xadd('video_upload', queue_message, '*')
     except Exception as err:
         fs.delete(file_id)
         print(err)
@@ -86,4 +89,7 @@ def retreive(current_user = Depends(get_current_user)):
     fs = gridfs.GridFS(app.database)
     for fid in fs.find({'uploadby': current_user}):
         names.append(fid.filename)
+        
+    if len(names) == 0:
+        return "You haven't uploaded any videos yet."
     return names
