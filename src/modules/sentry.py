@@ -1,25 +1,25 @@
-import raven
+import sentry_sdk
+from dotenv import dotenv_values
 
-# Assuming config is a module with a sentryDSN attribute
-from your_module_path.config import sentryDSN
+config = dotenv_values()
 
-client = raven.Client(sentryDSN)
+sentry_sdk.init(
+    dsn=config['SENTRY_DSN'],
 
-def sentry(string, obj, error):
-    with client.context() as ctx:
-        ctx.user = {'string': string, 'object': obj}
-        client.captureException(error)
+    # Enable performance monitoring
+    enable_tracing=True,
+)
 
-def sentry_error(error):
-    client.captureException(error)
+def sentry(info, object, error):
+    with sentry_sdk.push_scope() as scope:
+        scope.set_tag(info, object)
+        scope.level = 'warning'
+        sentry_sdk.capture_exception(error)
 
-def sentry_message(message):
-    client.captureMessage(message)
 
-def sentry_error_handler():
-    return raven.fetch_raven_error_handler(client)
+def sentryMessage(message: str):
+    sentry_sdk.capture_message(message)
 
-def sentry_request_handler():
-    return raven.fetch_raven_request_handler(client)
-
+def sentryError(error):
+    sentry_sdk.capture_exception(error)
 
