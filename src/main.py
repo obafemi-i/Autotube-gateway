@@ -8,6 +8,7 @@ from contextlib import asynccontextmanager
 
 from auth.access import get_current_user, router
 from schema.schema import Video
+from modules.sentry import sentryMessage
 
 config = dotenv_values()
 
@@ -43,6 +44,7 @@ app.include_router(router)
 
 @app.get('/')
 def read_root():
+    sentryMessage('Server is running..')
     return 'Server running...'
 
 
