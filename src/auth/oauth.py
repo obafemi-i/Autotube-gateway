@@ -69,5 +69,7 @@ def upload_to_youtube(youtube, video_file, title, description, category_id, priv
         status, response = insert_request.next_chunk()
         if status:
             print(f"Uploaded {int(status.progress() * 100)}%")
+        else:
+            print('Video currently being uploaded...')
 
         print(f"Video id '{response['id']}' was successfully uploaded.")

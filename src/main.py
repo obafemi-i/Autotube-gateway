@@ -20,7 +20,6 @@ redis_connect = get_redis_connection(
     decode_responses = True
 )
 
-
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # app start
@@ -38,14 +37,14 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 # app = FastAPI()
-youtube_auth = authenticate_with_oauth()
+# youtube_auth = authenticate_with_oauth()
 
 video_title = 'sample sampler'
 video_description = 'sampler description'
 video_catId = '22'
 video_file = 'Tom_and_Jerry.mkv'
 
-upload_to_youtube(youtube=youtube_auth, video_file=video_file, title=video_title, description=video_description, category_id=video_catId)
+# upload_to_youtube(youtube=youtube_auth, video_file=video_file, title=video_title, description=video_description, category_id=video_catId)
 
 app.include_router(router)
 
@@ -54,7 +53,7 @@ app.include_router(router)
 @app.get('/')
 def read_root():
     sentryMessage('Server is running..')
-    return 'Server running...'
+    return 'Server running..'
 
 
 @app.post('/upload')
@@ -91,7 +90,7 @@ async def upload_video(to_notify: str, additional_message: str | None = None, fi
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                             detail='Something went wrong, please try again')
     
-    return 'upload successful'
+    return 'Upload successful'
 
 
 @app.get('/get-videos')
