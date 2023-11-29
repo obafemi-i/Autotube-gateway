@@ -9,7 +9,7 @@ from contextlib import asynccontextmanager
 from auth.access import get_current_user, router
 from schema.schema import Video
 from modules.sentry import sentryMessage
-from auth.oauth import request_creds
+from auth.oauth import authenticate_with_oauth
 
 config = dotenv_values()
 
@@ -38,7 +38,8 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 # app = FastAPI()
-request_creds()
+google_auth = authenticate_with_oauth()
+
 app.include_router(router)
 
 # fs = gridfs.GridFS(app.database)
