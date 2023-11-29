@@ -9,7 +9,7 @@ from contextlib import asynccontextmanager
 from auth.access import get_current_user, router
 from schema.schema import Video
 from modules.sentry import sentryMessage
-from auth.oauth import authenticate_with_oauth
+from auth.oauth import authenticate_with_oauth, upload_to_youtube
 
 config = dotenv_values()
 
@@ -38,7 +38,14 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 # app = FastAPI()
-google_auth = authenticate_with_oauth()
+youtube_auth = authenticate_with_oauth()
+
+video_title = 'sample sampler'
+video_description = 'sampler description'
+video_catId = '22'
+video_file = 'Tom_and_Jerry.mkv'
+
+upload_to_youtube(youtube=youtube_auth, video_file=video_file, title=video_title, description=video_description, category_id=video_catId)
 
 app.include_router(router)
 
